@@ -104,30 +104,30 @@ pub fn gen_artifact_meta_as_json() -> PyResult<String> {
             } else {
                 None
             },
-            flower_icon: if let Some(_) = meta.flower {
+            flower_icon: if meta.flower.is_some() {
                 format!("UI_RelicIcon_{}_4", meta.internal_id)
             } else {
-                String::new()
+                String::default()
             },
-            feather_icon: if let Some(_) = meta.feather {
+            feather_icon: if meta.feather.is_some() {
                 format!("UI_RelicIcon_{}_2", meta.internal_id)
             } else {
-                String::new()
+                String::default()
             },
-            sand_icon: if let Some(_) = meta.sand {
+            sand_icon: if meta.sand.is_some() {
                 format!("UI_RelicIcon_{}_5", meta.internal_id)
             } else {
-                String::new()
+                String::default()
             },
-            goblet_icon: if let Some(_) = meta.goblet {
+            goblet_icon: if meta.goblet.is_some() {
                 format!("UI_RelicIcon_{}_1", meta.internal_id)
             } else {
-                String::new()
+                String::default()
             },
-            head_icon: if let Some(_) = meta.head {
+            head_icon: if meta.head.is_some() {
                 format!("UI_RelicIcon_{}_3", meta.internal_id)
             } else {
-                String::new()
+                String::default()
             },
         })
     }
