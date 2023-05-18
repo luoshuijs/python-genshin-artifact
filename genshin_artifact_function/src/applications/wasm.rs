@@ -1,21 +1,18 @@
-use mona::artifacts::{Artifact, ArtifactList};
 use mona::artifacts::effect_config::ArtifactEffectConfig;
+use mona::artifacts::{Artifact, ArtifactList};
 use mona::attribute::{AttributeUtils, ComplicatedAttributeGraph, SimpleAttributeGraph2};
-use mona::buffs::{Buff, BuffConfig};
-use mona::character::{Character, CharacterName};
-use mona::character::characters::damage;
-use mona::character::skill_config::CharacterSkillConfig;
-use mona::common::Element;
-use mona::damage::{ComplicatedDamageBuilder, DamageAnalysis, DamageContext, SimpleDamageBuilder};
+use mona::buffs::Buff;
+use mona::character::Character;
 use mona::damage::transformative_damage::TransformativeDamage;
+use mona::damage::DamageContext;
 use mona::enemies::Enemy;
 use mona::utils;
-use mona::weapon::Weapon;
-use mona_wasm::applications::common::{BuffInterface, CharacterInterface, EnemyInterface, SkillInterface, WeaponInterface};
+use mona_wasm::applications::common::{
+    BuffInterface, CharacterInterface, EnemyInterface, SkillInterface, WeaponInterface,
+};
 use mona_wasm::CalculatorInterface;
 use pyo3::prelude::*;
-use serde::{Deserialize, Serialize, Serializer};
-use serde_json::Value;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct CalculatorConfigInterface {
@@ -45,7 +42,6 @@ struct TransformativeDamageBridge {
     crystallize: f64,
 }
 
-
 impl From<TransformativeDamage> for TransformativeDamageBridge {
     fn from(damage: TransformativeDamage) -> Self {
         Self {
@@ -66,22 +62,20 @@ impl From<TransformativeDamage> for TransformativeDamageBridge {
     }
 }
 
-
 #[pyfunction]
 pub fn get_damage_analysis(value_str: String) -> PyResult<String> {
     let input: CalculatorConfigInterface = serde_json::from_str(&*value_str).unwrap();
 
-
     let character: Character<ComplicatedAttributeGraph> = input.character.to_character();
     let weapon = input.weapon.to_weapon(&character);
 
-    let buffs: Vec<Box<dyn Buff<ComplicatedAttributeGraph>>> = input.buffs.iter().map(|x| x.to_buff()).collect();
+    let buffs: Vec<Box<dyn Buff<ComplicatedAttributeGraph>>> =
+        input.buffs.iter().map(|x| x.to_buff()).collect();
     let artifacts: Vec<&Artifact> = input.artifacts.iter().collect();
-
 
     let artifact_config = match input.artifact_config {
         Some(x) => x,
-        None => ArtifactEffectConfig::default()
+        None => ArtifactEffectConfig::default(),
     };
 
     let enemy = if let Some(x) = input.enemy {
@@ -119,7 +113,7 @@ pub fn get_transformative_damage(value_str: String) -> PyResult<String> {
 
     let artifact_config = match input.artifact_config {
         Some(x) => x,
-        None => ArtifactEffectConfig::default()
+        None => ArtifactEffectConfig::default(),
     };
 
     let enemy = if let Some(x) = input.enemy {
@@ -130,7 +124,7 @@ pub fn get_transformative_damage(value_str: String) -> PyResult<String> {
 
     let attribute = AttributeUtils::create_attribute_from_big_config(
         &ArtifactList {
-            artifacts: &artifacts
+            artifacts: &artifacts,
         },
         &artifact_config,
         &character,

@@ -1,12 +1,9 @@
-use pyo3::prelude::*;
-use std::collections::HashMap;
+use mona::character::traits::CharacterSkillMap;
 use mona::character::{CharacterName, CharacterStaticData};
-use mona::character::traits::{CharacterSkillMap, CharacterSkillMapItem};
-use mona::common::item_config_type::ItemConfig;
 use mona_generate::gen_meta::gen_locale::get_index_mapping;
 use mona_generate::utils::config_to_json;
-use serde::{Deserialize, Serialize, Serializer};
-use serde_json::Value;
+use pyo3::prelude::*;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 struct CharacterMeta {
@@ -45,34 +42,37 @@ pub fn gen_character_meta_as_json() -> PyResult<String> {
 
         let skill_map: CharacterSkillMap = name_enum.get_skill_map();
         let s1: Vec<SkillMapItem> = if let Some(x) = skill_map.skill1 {
-            x.iter().cloned().map(|a| {
-                SkillMapItem {
+            x.iter()
+                .cloned()
+                .map(|a| SkillMapItem {
                     index: a.index,
-                    locale_index: *index_mapping.get(&a.text).unwrap()
-                }
-            }).collect()
+                    locale_index: *index_mapping.get(&a.text).unwrap(),
+                })
+                .collect()
         } else {
             Vec::new()
         };
 
         let s2: Vec<SkillMapItem> = if let Some(x) = skill_map.skill2 {
-            x.iter().cloned().map(|a| {
-                SkillMapItem {
+            x.iter()
+                .cloned()
+                .map(|a| SkillMapItem {
                     index: a.index,
-                    locale_index: *index_mapping.get(&a.text).unwrap()
-                }
-            }).collect()
+                    locale_index: *index_mapping.get(&a.text).unwrap(),
+                })
+                .collect()
         } else {
             Vec::new()
         };
 
         let s3: Vec<SkillMapItem> = if let Some(x) = skill_map.skill3 {
-            x.iter().cloned().map(|a| {
-                SkillMapItem {
+            x.iter()
+                .cloned()
+                .map(|a| SkillMapItem {
                     index: a.index,
-                    locale_index: *index_mapping.get(&a.text).unwrap()
-                }
-            }).collect()
+                    locale_index: *index_mapping.get(&a.text).unwrap(),
+                })
+                .collect()
         } else {
             Vec::new()
         };
@@ -105,7 +105,7 @@ pub fn gen_character_meta_as_json() -> PyResult<String> {
             skill_map2: s2,
             skill_map3: s3,
             config: config_data,
-            config_skill
+            config_skill,
         })
     }
 
