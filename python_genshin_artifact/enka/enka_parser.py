@@ -53,12 +53,14 @@ def enka_parser(data: dict, avatar_id: int) -> Tuple[CharacterInfo, WeaponInfo, 
         _key_name = "skill" + str(_index + 1)
         skill_info[_key_name] = _level
     for _index, _value in enumerate(character_info["Consts"]):
-        if "UI_Talent_U_" in _value:
-            if len(talent_id_list) > _index:
-                if _value.endswith("01"):
-                    skill_info["skill2"] += 3
-                if _value.endswith("02"):
-                    skill_info["skill3"] += 3
+        if (
+            "UI_Talent_U_" in _value
+            and len(talent_id_list) > _index
+        ):
+            if _value.endswith("01"):
+                skill_info["skill2"] += 3
+            if _value.endswith("02"):
+                skill_info["skill3"] += 3
     character_name = characters_map.get(avatar_id)
     character = CharacterInfo(
         name=character_name,
@@ -82,7 +84,6 @@ def de_equip_list(equip_list: list[dict]) -> Tuple[WeaponInfo, List[ArtifactInfo
         _weapon = _equip.get("weapon")
         _reliquary = _equip.get("reliquary")
         if _reliquary:
-            # artifact_id = _equip["itemId"]
             sub_stats: List[Tuple[str, float]] = []
             _flat = _equip["flat"]
             artifact_id = int(re.findall(r"\d+", _flat["icon"])[0])
