@@ -53,10 +53,7 @@ def enka_parser(data: dict, avatar_id: int) -> Tuple[CharacterInfo, WeaponInfo, 
         _key_name = "skill" + str(_index + 1)
         skill_info[_key_name] = _level
     for _index, _value in enumerate(character_info["Consts"]):
-        if (
-            "UI_Talent_U_" in _value
-            and len(talent_id_list) > _index
-        ):
+        if "UI_Talent_U_" in _value and len(talent_id_list) > _index:
             if _value.endswith("01"):
                 skill_info["skill2"] += 3
             if _value.endswith("02"):
