@@ -18,32 +18,54 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true  # 添加这行来检出子模块
+        
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+          target: ${{ matrix.target }}
+          toolchain: nightly
+          override: true
 
+    - name: Set nightly as default Rust toolchain
+      run: |
+        rustup default nightly
+        
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Create and start virtual environment
+      shell: bash
       run: |
         python3 -m venv venv
+        
+        if [[ ${{ matrix.os }} == windows* ]]
+        then
+            echo source venv/Scripts/activate
+        else
+            echo source venv/bin/activate
+        fi > activate_env.sh
 
     - name: Install dependencies
+      shell: bash
       run: |
-        source venv/bin/activate
+        source activate_env.sh
         python -m pip install --upgrade pip
         python -m pip install maturin
 
     - name: Build
+      shell: bash
       run: |
-        source venv/bin/activate
+        source activate_env.sh
         cd python_genshin_artifact_core
         maturin develop
 
     - name: Export install file
+      shell: bash
       if: github.ref == 'refs/heads/main'
       run: |
-        source venv/bin/activate
+        source activate_env.sh
         cd python_genshin_artifact_core
         maturin build
         mv target/wheels/*.whl genshin_artifact_core-${{ matrix.python-version }}-${{ matrix.os }}.whl
