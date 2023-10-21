@@ -25,22 +25,26 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Create and start virtual environment
+      shell: bash
       run: |
         python3 -m venv venv
 
     - name: Install dependencies
+      shell: bash
       run: |
         source venv/bin/activate
         python -m pip install --upgrade pip
         python -m pip install maturin
 
     - name: Build
+      shell: bash
       run: |
         source venv/bin/activate
         cd python_genshin_artifact_core
         maturin develop
 
     - name: Export install file
+      shell: bash
       if: github.ref == 'refs/heads/main'
       run: |
         source venv/bin/activate
