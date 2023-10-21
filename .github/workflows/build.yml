@@ -25,29 +25,30 @@ jobs:
     - name: Create and start virtual environment
       run: |
         python3 -m venv venv
-        source venv/bin/activate
 
     - name: Install dependencies
       run: |
+        source venv/bin/activate
         python -m pip install --upgrade pip
-        python -m pip install --user maturin
-
-    - name: Change directory
-      run: |
-        cd python_genshin_artifact_core
+        python -m pip install maturin
 
     - name: Build
       run: |
+        source venv/bin/activate
+        cd python_genshin_artifact_core
         maturin develop
 
     - name: Export install file
       if: github.ref == 'refs/heads/main'
       run: |
+        source venv/bin/activate
+        cd python_genshin_artifact_core
         maturin build
         mv target/wheels/*.whl genshin_artifact_core-${{ matrix.python-version }}-${{ matrix.os }}.whl
 
     - name: Upload Artifact
+      if: github.ref == 'refs/heads/main'
       uses: actions/upload-artifact@v2
       with:
         name: genshin_artifact_core-${{ matrix.python-version }}-${{ matrix.os }}.whl
-        path: genshin_artifact_core-${{ matrix.python-version }}-${{ matrix.os }}.whl
+        path: python_genshin_artifact_core/genshin_artifact_core-${{ matrix.python-version }}-${{ matrix.os }}.whl
