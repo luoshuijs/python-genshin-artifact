@@ -32,9 +32,9 @@ jobs:
         
         if [[ ${{ matrix.os }} == "windows*" ]]
         then
-            echo source venv/bin/activate
-        else
             echo source venv/Scripts/activate
+        else
+            echo source venv/bin/activate
         fi > activate_env.sh
 
     - name: Install dependencies
