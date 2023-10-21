@@ -22,17 +22,21 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Build
+    - name: Change directory
       run: |
         cd genshin_artifact_core
+
+    - name: Build
+      run: |
         maturin develop
 
     - name: Export install file
       if: github.ref == 'refs/heads/main'
       run: |
-        cd genshin_artifact_core
         maturin build
         mv target/wheels/*.whl genshin_artifact_core-${{ matrix.python-version }}-${{ matrix.os }}.whl
+
+    - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
         name: genshin_artifact_core-${{ matrix.python-version }}-${{ matrix.os }}.whl
