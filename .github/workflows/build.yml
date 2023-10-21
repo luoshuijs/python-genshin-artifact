@@ -29,7 +29,7 @@ jobs:
       run: |
         python3 -m venv venv
         
-        if [[ ${{ matrix.os }} == "windows*" ]]
+        if [[ ${{ matrix.os }} == windows* ]]
         then
             echo source venv/Scripts/activate
         else
